@@ -4,23 +4,15 @@ from hazelcast.discovery import HazelcastCloudDiscovery
 import os
 import logging
 
+from connection import client_config
+
+logging.basicConfig(level=logging.INFO)
+
 
 def entry_added(event):
     print("Entry added with key: %s, value: %s" % (event.key, event.value))
 
-
-logging.basicConfig(level=logging.INFO)
-HazelcastCloudDiscovery._CLOUD_URL_BASE = "{{ .CloudUrl}}"
-client = hazelcast.HazelcastClient(
-    cluster_name="{{ .ClusterName}}",
-    cloud_discovery_token="{{ .ClusterDiscoveryToken}}",
-    statistics_enabled=True,
-    ssl_enabled=True,
-    ssl_cafile=os.path.abspath("{{ .SslCaPath}}"),
-    ssl_certfile=os.path.abspath("{{ .SslCertPath}}"),
-    ssl_keyfile=os.path.abspath("{{ .SslKeyPath}}"),
-    ssl_password="{{ .SslKeyPassword}}",
-)
+client = hazelcast.HazelcastClient(client_config)
 my_map = client.get_map("{{ .MapName}}").blocking()
 my_map.add_entry_listener(True, added_func=entry_added)
 
