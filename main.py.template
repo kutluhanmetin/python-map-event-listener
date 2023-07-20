@@ -10,7 +10,7 @@ def entry_added(event):
 
 
 logging.basicConfig(level=logging.INFO)
-HazelcastCloudDiscovery._CLOUD_URL_BASE = "{{ .CloudUrl}}"
+HazelcastCloudDiscovery._CLOUD_URL_BASE = os.environ["HZ_CLOUD_COORDINATOR_BASE_URL"]
 client = hazelcast.HazelcastClient(
     cluster_name="{{ .ClusterName}}",
     cloud_discovery_token="{{ .ClusterDiscoveryToken}}",
